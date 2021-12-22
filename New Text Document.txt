@@ -1,0 +1,109 @@
+--
+-- File generated with SQLiteStudio v3.3.2 on Mon Mar 22 18:47:06 2021
+--
+-- Text encoding used: System
+--
+PRAGMA foreign_keys = off;
+BEGIN TRANSACTION;
+
+-- Table: Bookings
+CREATE TABLE Bookings (BookingID INT (11) NOT NULL PRIMARY KEY, BookingStartDate DATETIME NOT NULL, BookingEndDate DATETIME NOT NULL, TotalPaymentDueDate DATETIME NOT NULL, TotalPaymentDueAmount INT (11) NOT NULL, BookingComments VARCHAR (100), RoomID INT (11) NOT NULL REFERENCES Room (RoomID), CustomerID INT (11) NOT NULL REFERENCES Customer (CustomerID));
+INSERT INTO Bookings (BookingID, BookingStartDate, BookingEndDate, TotalPaymentDueDate, TotalPaymentDueAmount, BookingComments, RoomID, CustomerID) VALUES (22222, '02/03/2021', '29/03/2021', '28/04/2021', 2500, 'CUSTOMER NEED ADDITIONAL SERVISE ', 'A5', 1000);
+INSERT INTO Bookings (BookingID, BookingStartDate, BookingEndDate, TotalPaymentDueDate, TotalPaymentDueAmount, BookingComments, RoomID, CustomerID) VALUES (33333, '5/03/2021', '23/03/2021', '20/03/2021', 1000, 'HOUSEKEEPING SERVISE', 'A9', 3000);
+INSERT INTO Bookings (BookingID, BookingStartDate, BookingEndDate, TotalPaymentDueDate, TotalPaymentDueAmount, BookingComments, RoomID, CustomerID) VALUES (44444, '1/03/2021', '15/03/2021', '11/03/2021', 500, 'N/A', 'A6', 4000);
+INSERT INTO Bookings (BookingID, BookingStartDate, BookingEndDate, TotalPaymentDueDate, TotalPaymentDueAmount, BookingComments, RoomID, CustomerID) VALUES (1111, '2/03/2021', '5/04/2021', '1/04/2021', 5000, 'ROOM CLEANING', 'A10', 2000);
+
+-- Table: Buy
+CREATE TABLE Buy (BuyDate DATETIME NOT NULL, ConcertDate DATETIME NOT NULL, TotalPayment INT (11) NOT NULL, ConcertID INT (11) NOT NULL REFERENCES Concert (ConcertID), CustomerID INT (11) NOT NULL REFERENCES Customer (CustomerID));
+INSERT INTO Buy (BuyDate, ConcertDate, TotalPayment, ConcertID, CustomerID) VALUES ('22/03/2021', '24/03/2021', 2000, 2345, 4000);
+INSERT INTO Buy (BuyDate, ConcertDate, TotalPayment, ConcertID, CustomerID) VALUES ('01/03/2021', '28/03/2021', 2300, 1234, 3000);
+INSERT INTO Buy (BuyDate, ConcertDate, TotalPayment, ConcertID, CustomerID) VALUES ('5/03/2021', '25/03/2021', 5000, 4444, 1000);
+
+-- Table: City
+CREATE TABLE City (CityID INT (11) PRIMARY KEY NOT NULL, CityName VARCHAR (100) NOT NULL, StateID INT (11) NOT NULL REFERENCES State (StateID));
+INSERT INTO City (CityID, CityName, StateID) VALUES (22, 'VADODARA', 30001);
+INSERT INTO City (CityID, CityName, StateID) VALUES (11, 'AUCKLAND', 1432);
+INSERT INTO City (CityID, CityName, StateID) VALUES (8, 'NEW YORK', 33421);
+INSERT INTO City (CityID, CityName, StateID) VALUES (1, 'LONDON', 33553);
+
+-- Table: Concert
+CREATE TABLE Concert (ConcertID INT (11) PRIMARY KEY NOT NULL, ConcertDate DATETIME NOT NULL, ConcertNames VARCHAR (100) NOT NULL, CityID INT (11) NOT NULL REFERENCES City (CityID), SingerID INT (11) REFERENCES Singer (SingerID) NOT NULL);
+INSERT INTO Concert (ConcertID, ConcertDate, ConcertNames, CityID, SingerID) VALUES (2345, '28/03/2021', 'ABC ', 22, 'C001');
+INSERT INTO Concert (ConcertID, ConcertDate, ConcertNames, CityID, SingerID) VALUES (1234, '22/03/2021', 'DEF', 11, 'B001');
+INSERT INTO Concert (ConcertID, ConcertDate, ConcertNames, CityID, SingerID) VALUES (4444, '01/04/2021', 'GHI', 1, 'A001');
+
+-- Table: Country
+CREATE TABLE Country (CountryID INT (11) NOT NULL PRIMARY KEY, CountryName VARCHAR (100) NOT NULL);
+INSERT INTO Country (CountryID, CountryName) VALUES (1, 'INDIA');
+INSERT INTO Country (CountryID, CountryName) VALUES (2, 'NEW ZEALAND');
+INSERT INTO Country (CountryID, CountryName) VALUES (3, 'UK');
+INSERT INTO Country (CountryID, CountryName) VALUES (4, 'USA');
+
+-- Table: Customer
+CREATE TABLE Customer (CustomerID INT (11) NOT NULL PRIMARY KEY, CustomerForeNames VARCHAR (100) NOT NULL, CustomerSureNames VARCHAR (100) NOT NULL, CustomerDOB DATETIME NOT NULL, CustomerHomePhone INT (12), CustomerWorkPhone INT (12), CustomerMobilePhone INT (12) NOT NULL, CustomerEmail VARCHAR (100) NOT NULL, CityID INT (11) REFERENCES City (CityID) NOT NULL);
+INSERT INTO Customer (CustomerID, CustomerForeNames, CustomerSureNames, CustomerDOB, CustomerHomePhone, CustomerWorkPhone, CustomerMobilePhone, CustomerEmail, CityID) VALUES (1000, 'RAJU ', 'PATEL', '11/11/1990', 123456, 789012, 9876543210, 'RAJU@XYZ.COM', 22);
+INSERT INTO Customer (CustomerID, CustomerForeNames, CustomerSureNames, CustomerDOB, CustomerHomePhone, CustomerWorkPhone, CustomerMobilePhone, CustomerEmail, CityID) VALUES (3000, 'XYZ', 'ABC', '2/2/1980', 543225, 76543667, 8654324667, 'HHH@BDT.COM', 1);
+INSERT INTO Customer (CustomerID, CustomerForeNames, CustomerSureNames, CustomerDOB, CustomerHomePhone, CustomerWorkPhone, CustomerMobilePhone, CustomerEmail, CityID) VALUES (4000, 'LLL', 'QNO', '5/8/1980', 1515451, 5544846, 5484459788, 'OKF@NKJGB.COM', 8);
+INSERT INTO Customer (CustomerID, CustomerForeNames, CustomerSureNames, CustomerDOB, CustomerHomePhone, CustomerWorkPhone, CustomerMobilePhone, CustomerEmail, CityID) VALUES (2000, 'NICK', 'XYE', '25/10/1990', 234556, 654987, 1234566789, 'NICK@ABC.COM', 11);
+
+-- Table: PaymentMethods
+CREATE TABLE PaymentMethods (PaymentMethodsID INT (11) PRIMARY KEY NOT NULL, PaymentMethod VARCHAR (100) NOT NULL);
+
+-- Table: Payments
+CREATE TABLE Payments (PaymentID INT (11) PRIMARY KEY NOT NULL, PaymentAmount INT (12) NOT NULL, PaymentComments VARCHAR (100) NOT NULL, CustomerID INT (11) NOT NULL REFERENCES Customer (CustomerID), PaymentMethodsID INT (11) NOT NULL REFERENCES PaymentMethods (PaymentMethodsID));
+
+-- Table: Room
+CREATE TABLE Room (RoomID INT PRIMARY KEY NOT NULL ON CONFLICT FAIL, Price INT (11) NOT NULL, Floor VARCHAR (100) NOT NULL, AdditionalNotes VARCHAR (100) NOT NULL, RoomTypesID INT (11) REFERENCES RoomTypes (RoomTypesID), RoomBandsID INT (11) REFERENCES RoomBands (RoomBandsID), RoomFacilitiesID INT (11) REFERENCES RoomFacilities (RoomFacilitiesID));
+INSERT INTO Room (RoomID, Price, Floor, AdditionalNotes, RoomTypesID, RoomBandsID, RoomFacilitiesID) VALUES ('A1', 100, '1', 'NO BREAKFAST INC.', 10, 'C', 'NC');
+INSERT INTO Room (RoomID, Price, Floor, AdditionalNotes, RoomTypesID, RoomBandsID, RoomFacilitiesID) VALUES ('A2', 100, '1', 'NO BREAKFAST INC.', 10, 'C', 'HK');
+INSERT INTO Room (RoomID, Price, Floor, AdditionalNotes, RoomTypesID, RoomBandsID, RoomFacilitiesID) VALUES ('A3', 100, '1', 'NO BREAKFAST INC.', 10, 'C', 'CB');
+INSERT INTO Room (RoomID, Price, Floor, AdditionalNotes, RoomTypesID, RoomBandsID, RoomFacilitiesID) VALUES ('A4', 120, '2', 'NO BREAKFAST INC.', 20, 'B', 'DNR');
+INSERT INTO Room (RoomID, Price, Floor, AdditionalNotes, RoomTypesID, RoomBandsID, RoomFacilitiesID) VALUES ('A5', 120, '2', 'NO BREAKFAST INC.', 20, 'B', 'LUN');
+INSERT INTO Room (RoomID, Price, Floor, AdditionalNotes, RoomTypesID, RoomBandsID, RoomFacilitiesID) VALUES ('A6', 120, '2', 'NO BREAKFAST INC.', 20, 'B', 'BF');
+INSERT INTO Room (RoomID, Price, Floor, AdditionalNotes, RoomTypesID, RoomBandsID, RoomFacilitiesID) VALUES ('A7', 150, '3', 'NO BREAKFAST INC.', 30, 'AB', 'CB');
+INSERT INTO Room (RoomID, Price, Floor, AdditionalNotes, RoomTypesID, RoomBandsID, RoomFacilitiesID) VALUES ('A8', 150, '3', 'NO BREAKFAST INC.', 30, 'AB', 'TBS');
+INSERT INTO Room (RoomID, Price, Floor, AdditionalNotes, RoomTypesID, RoomBandsID, RoomFacilitiesID) VALUES ('A9', 180, '4', 'BREAKFAST INC.', 40, 'A', 'HK');
+INSERT INTO Room (RoomID, Price, Floor, AdditionalNotes, RoomTypesID, RoomBandsID, RoomFacilitiesID) VALUES ('A10', 180, '4', 'BREAKFAST INC.', 40, 'A', 'TBS');
+
+-- Table: RoomBands
+CREATE TABLE RoomBands (RoomBandsID INT (11) NOT NULL PRIMARY KEY, BandDesc VARCHAR (200));
+INSERT INTO RoomBands (RoomBandsID, BandDesc) VALUES ('C', 'NILL');
+INSERT INTO RoomBands (RoomBandsID, BandDesc) VALUES ('B', 'SELECTED FACILITY');
+INSERT INTO RoomBands (RoomBandsID, BandDesc) VALUES ('AB', 'SELECTED FACILITY');
+INSERT INTO RoomBands (RoomBandsID, BandDesc) VALUES ('A', 'ALL FACILITY ADDED ');
+
+-- Table: RoomFacilities
+CREATE TABLE RoomFacilities (RoomFacilitiesID INT (11) NOT NULL PRIMARY KEY, FacilitiesDesc VARCHAR (200));
+INSERT INTO RoomFacilities (RoomFacilitiesID, FacilitiesDesc) VALUES ('BF', 'BREAKFAST');
+INSERT INTO RoomFacilities (RoomFacilitiesID, FacilitiesDesc) VALUES ('LUN', 'LUNCH');
+INSERT INTO RoomFacilities (RoomFacilitiesID, FacilitiesDesc) VALUES ('DNR', 'DINNER');
+INSERT INTO RoomFacilities (RoomFacilitiesID, FacilitiesDesc) VALUES ('CB', 'CONCERT BOOKING');
+INSERT INTO RoomFacilities (RoomFacilitiesID, FacilitiesDesc) VALUES ('TBS', 'TAXI BOOKING SERVISE ');
+INSERT INTO RoomFacilities (RoomFacilitiesID, FacilitiesDesc) VALUES ('NC', 'NORMAL CLEANING');
+INSERT INTO RoomFacilities (RoomFacilitiesID, FacilitiesDesc) VALUES ('HK', 'HOUSEKEEPING');
+INSERT INTO RoomFacilities (RoomFacilitiesID, FacilitiesDesc) VALUES ('UA', 'UNAVAILABLE');
+
+-- Table: RoomTypes
+CREATE TABLE RoomTypes (RoomTypesID INT NOT NULL PRIMARY KEY, TypeDesc VARCHAR (100) NOT NULL);
+INSERT INTO RoomTypes (RoomTypesID, TypeDesc) VALUES (10, '1 BEDROOM AND 1 BATHROOM/NO BREAKFAST INCLUDE');
+INSERT INTO RoomTypes (RoomTypesID, TypeDesc) VALUES (20, '2 BEDROOM AND 1 BATHROOM/NO BREAKFAST INCLUDE');
+INSERT INTO RoomTypes (RoomTypesID, TypeDesc) VALUES (30, '3 BEDROOM AND 2 BATHROOM WITH BREAKFAST');
+INSERT INTO RoomTypes (RoomTypesID, TypeDesc) VALUES (40, '4 BEDROOM AND 2 BATHROOM WITH BREAKFAST ');
+
+-- Table: Singer
+CREATE TABLE Singer (SingerID INT (11) PRIMARY KEY NOT NULL, SingerForeNames VARCHAR (100) NOT NULL, SingerSurNames VARCHAR (100) NOT NULL);
+INSERT INTO Singer (SingerID, SingerForeNames, SingerSurNames) VALUES ('A001', 'JUSTIN ', 'BIEBER');
+INSERT INTO Singer (SingerID, SingerForeNames, SingerSurNames) VALUES ('B001', 'TAYLOR ', 'SWIFT');
+INSERT INTO Singer (SingerID, SingerForeNames, SingerSurNames) VALUES ('C001', 'ARIJIT', 'SINGH');
+INSERT INTO Singer (SingerID, SingerForeNames, SingerSurNames) VALUES ('D001', 'A.R.', 'RAHMAN');
+INSERT INTO Singer (SingerID, SingerForeNames, SingerSurNames) VALUES ('E001', 'NEHA', 'KAKKAR');
+
+-- Table: State
+CREATE TABLE State (StateID INT (11) NOT NULL PRIMARY KEY, StateName VARCHAR (100) NOT NULL, CountryID VARCHAR (11) NOT NULL REFERENCES Country (CountryID));
+INSERT INTO State (StateID, StateName, CountryID) VALUES (30001, 'GUJARAT', '1');
+INSERT INTO State (StateID, StateName, CountryID) VALUES (1432, 'AUCKLAND', '2');
+INSERT INTO State (StateID, StateName, CountryID) VALUES (33421, 'LONDON', '3');
+INSERT INTO State (StateID, StateName, CountryID) VALUES (33553, 'NEW YORK', '4');
+
+COMMIT TRANSACTION;
+PRAGMA foreign_keys = on;
